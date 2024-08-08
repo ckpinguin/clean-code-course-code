@@ -1,24 +1,24 @@
 from datetime import datetime
 
 
-class Entity:
-    def __init__(self, title, description, ymdhm):
+class BlogPost:
+    def __init__(self, title, description, publish_date):
         self.title = title
         self.description = description
-        self.ymdhm = ymdhm
+        self.publish_date = publish_date
 
 
-def output(item):
-    print('Title: ' + item.title)
-    print('Description: ' + item.description)
-    print('Published: ' + item.ymdhm)
+def print_blog_post(blog_post):
+    print('Title: ' + blog_post.title)
+    print('Description: ' + blog_post.description)
+    print('Published: ' + blog_post.publish_date)
 
 
 summary = 'Clean Code Is Great!'
-desc = 'Actually, writing Clean Code can be pretty fun. You\'ll see!'
-new_date = datetime.now()
-publish = new_date.strftime('%Y-%m-%d %H:%M')
+description = 'Actually, writing Clean Code can be pretty fun. You\'ll see!'
+now = datetime.now()
+formatted_date = now.strftime('%Y-%m-%d %H:%M')
 
-item = Entity(summary, desc, publish)
+blog_post = BlogPost(summary, description, formatted_date)
 
-output(item)
+print_blog_post(blog_post)
