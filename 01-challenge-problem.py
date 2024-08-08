@@ -1,35 +1,35 @@
 class Point:
-    def __init__(self, coordX, coordY):
-        self.coordX = coordX
-        self.coordY = coordY
+    def __init__(self, x: int, y: int):
+        self.x: int = x
+        self.y: int = y
 
 
 class Rectangle:
-    def __init__(self, starting_point, broad, high):
-        self.starting_point = starting_point
-        self.broad = broad
-        self.high = high
+    def __init__(self, top_left: Point, width: int, height: int):
+        self.top_left: int = top_left
+        self.width: int = width
+        self.height: int = height
 
-    def area(self):
-        return self.broad * self.high
+    def area(self) -> int:
+        return self.width * self.height
 
-    def end_points(self):
-        top_right = self.starting_point.coordX + self.broad
-        bottom_left = self.starting_point.coordY + self.high
-        print('Starting Point (X)): ' + str(self.starting_point.coordX))
-        print('Starting Point (Y)): ' + str(self.starting_point.coordY))
+    def end_points(self) -> None:
+        top_right = self.top_left.x + self.width
+        bottom_left = self.top_left.y - self.height
+        print('Starting Point (X)): ' + str(self.top_left.x))
+        print('Starting Point (Y)): ' + str(self.top_left.y))
         print('End Point X-Axis (Top Right): ' + str(top_right))
         print('End Point Y-Axis (Bottom Left): ' + str(bottom_left))
 
 
-def build_stuff():
-    main_point = Point(50, 100)
-    rect = Rectangle(main_point, 90, 10)
+def create_rectangle() -> Rectangle:
+    top_left = Point(50, 100)
+    rectangle = Rectangle(top_left, width=90, height=10)
 
-    return rect
+    return rectangle
 
 
-my_rect = build_stuff()
+rectangle = create_rectangle()
 
-print(my_rect.area())
-my_rect.end_points()
+print(rectangle.area())
+rectangle.end_points()
