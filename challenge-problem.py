@@ -1,31 +1,23 @@
 # (c) Maximilian Schwarzmüller / Academind GmbH
-
-# *********
-# Imports
-# *********
+from typing import Any
 from os import path, makedirs
 from pathlib import Path
 
-# *********
-# Main
-# *********
-# A class which allows us to create DiskStorage instances
-
 
 class DiskStorage:
-    def __init__(self, directory_name):
-        self.storage_directory = directory_name
+    def __init__(self, directory_name: str) -> None:
+        self.storage_directory: str = directory_name
 
-    def get_directory_path(self):
+    def get_directory_path(self) -> Path:
         return Path(self.storage_directory)
 
-    # This must be called before a file is inserted
-    def create_directory(self):
+    def create_directory(self) -> None:
         if (not path.exists(self.get_directory_path())):
             makedirs(self.storage_directory)
 
     # Warning: Directory must exist in advance
-    def insert_file(self, file_name, content):
+    def insert_file(self, file_name: str, content: Any) -> None:
+        self.create_directory()
         file = open(self.get_directory_path() / file_name, 'w')
         file.write(content)
         file.close()
