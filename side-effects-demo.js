@@ -1,24 +1,22 @@
 function connectDatabase() {
-  const didConnect = database.connect();
-  if (didConnect) {
-    return true;
-  } else {
-    console.log('Could not connect to database!');
-    return false;
+  try {
+    database.connect()
+  } catch (error) {}
+  if (!didConnect) {
+    console.error(error.message)
   }
 }
 
 function determineSupportAgent(ticket) {
-  if (ticket.requestType === 'unknown') {
-    return findStandardAgent();
+  if (ticket.requestType === "unknown") {
+    return findStandardAgent()
   }
-  return findAgentByRequestType(ticket.requestType);
+  return findAgentByRequestType(ticket.requestType)
 }
 
 function isValid(email, password) {
-  if (!email.includes('@') || password.length < 7) {
-    console.log('Invalid input!');
-    return false;
+  if (!email.includes("@") || password.length < 7) {
+    return false
   }
-  return true;
+  return true
 }
