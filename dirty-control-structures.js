@@ -1,5 +1,12 @@
 main()
 
+const METHOD_CREDIT_CARD = "CREDIT_CARD"
+const METHOD_PAYPAL = "PAYPAL"
+const METHOD_PLAN = "PLAN"
+const TYPE_PAYMENT = "PAYMENT"
+const TYPE_REFUND = "REFUND"
+const STATUS_OPEN = "OPEN"
+
 function main() {
   const transactions = [
     {
@@ -90,13 +97,13 @@ function getTransactionProcessors(transaction) {
     processPayment: null,
     processRefund: null,
   }
-  if (usesTransactionMethod(transaction, "CREDIT_CARD")) {
+  if (usesTransactionMethod(transaction, METHOD_CREDIT_CARD)) {
     processors.processPayment = processCreditCardPayment
     processors.processRefund = processCreditCardRefund
-  } else if (usesTransactionMethod(transaction, "PAYPAL")) {
+  } else if (usesTransactionMethod(transaction, METHOD_PAYPAL)) {
     processors.processPayment = processPayPalPayment
     processors.processRefund = processPayPalRefund
-  } else if (usesTransactionMethod(transaction, "PLAN")) {
+  } else if (usesTransactionMethod(transaction, METHOD_PLAN)) {
     processors.processPayment = processPlanPayment
     processors.processRefund = processPlanRefund
   }
@@ -104,15 +111,14 @@ function getTransactionProcessors(transaction) {
 }
 
 function usesCreditCard(transaction) {
-  return transaction.method === "CREDIT_CARD"
+  return transaction.method === METHOD_CREDIT_CARD
 }
 
 function usesPayPal(transaction) {
-  return transaction.method === "PAYPAL"
+  return transaction.method === METHOD_PAYPAL
 }
-
 function usesPlan(transaction) {
-  return transaction.method === "PLAN"
+  return transaction.method === METHOD_PLAN
 }
 
 // Alternatively to above 3 functions:
@@ -121,15 +127,15 @@ function usesTransactionMethod(transaction, method) {
 }
 
 function isPayment(transaction) {
-  return transaction.type === "PAYMENT"
+  return transaction.type === TYPE_PAYMENT
 }
 
 function isRefund(transaction) {
-  return transaction.type === "REFUND"
+  return transaction.type === TYPE_REFUND
 }
 
 function isOpen(transaction) {
-  return transaction.status === "OPEN"
+  return transaction.status === STATUS_OPEN
 }
 
 /* function processCreditCardTransaction(transaction) {
@@ -176,11 +182,9 @@ function processRefund(transaction) {
   }
 } */
 
-function showErrorMessage(message, item) {
+function showErrorMessage(message, item = {}) {
   console.log(message)
-  if (item) {
-    console.log(item)
-  }
+  console.log(item)
 }
 
 function isEmpty(transactions) {
