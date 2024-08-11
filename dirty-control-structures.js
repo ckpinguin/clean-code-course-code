@@ -39,11 +39,8 @@ function main() {
 }
 
 function processTransactions(transactions) {
-  if (isEmpty(transactions)) {
-    const error = new Error("No transactions provided!")
-    error.code = 1 // just as an example
-    throw error
-  }
+  validateTransactions(transactions)
+
   for (const transaction of transactions) {
     try {
       processTransaction(transaction)
@@ -53,7 +50,27 @@ function processTransactions(transactions) {
   }
 }
 
+function validateTransactions(transactions) {
+  if (isEmpty(transactions)) {
+    const error = new Error("No transactions provided!")
+    error.code = 1 // just as an example
+    throw error
+  }
+}
+
 function processTransaction(transaction) {
+  validateTransaction(transaction)
+
+  if (usesTransactionMethod(transaction, "CREDIT_CARD")) {
+    processCreditCardTransaction(transaction)
+  } else if (usesTransactionMethod(transaction, "PAYPAL")) {
+    processPayPalTransaction(transaction)
+  } else if (usesTransactionMethod(transaction, "PLAN")) {
+    processPlanTransaction(transaction)
+  }
+}
+
+function validateTransaction(transaction) {
   if (!isOpen(transaction)) {
     const error = new Error("Invalid transaction status!")
     throw error
@@ -63,14 +80,6 @@ function processTransaction(transaction) {
     const error = new Error("Invalid transaction type!")
     error.item = transaction
     throw error
-  }
-
-  if (usesTransactionMethod(transaction, "CREDIT_CARD")) {
-    processCreditCardTransaction(transaction)
-  } else if (usesTransactionMethod(transaction, "PAYPAL")) {
-    processPayPalTransaction(transaction)
-  } else if (usesTransactionMethod(transaction, "PLAN")) {
-    processPlanTransaction(transaction)
   }
 }
 
