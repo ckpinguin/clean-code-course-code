@@ -31,37 +31,68 @@ function main() {
       amount: "15.99",
     },
   ]
-
-  processTransactions(transactions)
+  try {
+    processTransactions(transactions)
+  } catch (err) {
+    showErrorMessage(err.message)
+  }
 }
 
 function processTransactions(transactions) {
   if (isEmpty(transactions)) {
-    showErrorMessage("No transactions provided!")
-    return
+    const error = new Error("No transactions provided!")
+    error.code = 1 // just as an example
+    throw error
   }
-
   for (const transaction of transactions) {
-    processTransaction(transaction)
+    try {
+      processTransaction(transaction)
+    } catch (err) {
+      showErrorMessage(err.message, error.item)
+    }
   }
 }
 
 function processTransaction(transaction) {
   if (!isOpen(transaction)) {
-    showErrorMessage("Invalid transaction status!")
-    return
+    const error = new Error("Invalid transaction status!")
+    throw error
   }
-  if (isPayment(transaction)) {
-    processPayment(transaction)
-  } else if (isRefund(transaction)) {
-    processRefund(transaction)
-  } else {
-    showErrorMessage("Invalid transaction type!", transaction)
+
+  if (!isPayment(transaction) && !isRefund(transaction)) {
+    const error = new Error("Invalid transaction type!")
+    error.item = transaction
+    throw error
+  }
+
+  if (usesTransactionMethod(transaction, "CREDIT_CARD")) {
+    processCreditCardTransaction(transaction)
+  } else if (usesTransactionMethod(transaction, "PAYPAL")) {
+    processPayPalTransaction(transaction)
+  } else if (usesTransactionMethod(transaction, "PLAN")) {
+    processPlanTransaction(transaction)
   }
 }
 
+function usesCreditCard(transaction) {
+  return transaction.method === "CREDIT_CARD"
+}
+
+function usesPayPal(transaction) {
+  return transaction.method === "PAYPAL"
+}
+
+function usesPlan(transaction) {
+  return transaction.method === "PLAN"
+}
+
+// Alternatively to above 3 functions:
+function usesTransactionMethod(transaction, method) {
+  return transaction.method === method
+}
+
 function isPayment(transaction) {
-  return transaction.type === "PAYMENT")
+  return transaction.type === "PAYMENT"
 }
 
 function isRefund(transaction) {
@@ -72,7 +103,31 @@ function isOpen(transaction) {
   return transaction.status === "OPEN"
 }
 
-function processPayment(transaction) {
+function processCreditCardTransaction(transaction) {
+  if (isPayment(transaction)) {
+    processCreditCardPayment(transaction)
+  } else if (isRefund(transaction)) {
+    processCreditCardRefund(transaction)
+  }
+}
+
+function processPayPalTransaction(transaction) {
+  if (isPayment(transaction)) {
+    processPayPalPayment(transaction)
+  } else if (isRefund(transaction)) {
+    processPayPalRefund(transaction)
+  }
+}
+
+function processPlanTransaction(transaction) {
+  if (isPayment(transaction)) {
+    processPlanPayment(transaction)
+  } else if (isRefund(transaction)) {
+    processPlanRefund(transaction)
+  }
+}
+
+/* function processPayment(transaction) {
   if (transaction.method === "CREDIT_CARD") {
     processCreditCardPayment(transaction)
   } else if (transaction.method === "PAYPAL") {
@@ -90,7 +145,7 @@ function processRefund(transaction) {
   } else if (transaction.method === "PLAN") {
     processPlanRefund(transaction)
   }
-}
+} */
 
 function showErrorMessage(message, item) {
   console.log(message)
