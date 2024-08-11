@@ -42,11 +42,7 @@ function processTransactions(transactions) {
   validateTransactions(transactions)
 
   for (const transaction of transactions) {
-    try {
-      processTransaction(transaction)
-    } catch (err) {
-      showErrorMessage(err.message, error.item)
-    }
+    processTransaction(transaction)
   }
 }
 
@@ -59,14 +55,18 @@ function validateTransactions(transactions) {
 }
 
 function processTransaction(transaction) {
-  validateTransaction(transaction)
+  try {
+    validateTransaction(transaction)
 
-  if (usesTransactionMethod(transaction, "CREDIT_CARD")) {
-    processCreditCardTransaction(transaction)
-  } else if (usesTransactionMethod(transaction, "PAYPAL")) {
-    processPayPalTransaction(transaction)
-  } else if (usesTransactionMethod(transaction, "PLAN")) {
-    processPlanTransaction(transaction)
+    if (usesTransactionMethod(transaction, "CREDIT_CARD")) {
+      processCreditCardTransaction(transaction)
+    } else if (usesTransactionMethod(transaction, "PAYPAL")) {
+      processPayPalTransaction(transaction)
+    } else if (usesTransactionMethod(transaction, "PLAN")) {
+      processPlanTransaction(transaction)
+    }
+  } catch (error) {
+    showErrorMessage(error.message, error.item)
   }
 }
 
