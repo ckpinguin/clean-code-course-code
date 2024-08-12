@@ -1,31 +1,50 @@
-type Purchase = any;
+type Purchase = any
 
-let Logistics: any;
+let Logistics: any
 
 class Delivery {
-  private purchase: Purchase;
+  protected purchase: Purchase
 
   constructor(purchase: Purchase) {
-    this.purchase = purchase;
-  }
-
-  deliverProduct() {
-    if (this.purchase.deliveryType === 'express') {
-      Logistics.issueExpressDelivery(this.purchase.product);
-    } else if (this.purchase.deliveryType === 'insured') {
-      Logistics.issueInsuredDelivery(this.purchase.product);
-    } else {
-      Logistics.issueStandardDelivery(this.purchase.product);
-    }
-  }
-
-  trackProduct() {
-    if (this.purchase.deliveryType === 'express') {
-      Logistics.trackExpressDelivery(this.purchase.product);
-    } else if (this.purchase.deliveryType === 'insured') {
-      Logistics.trackInsuredDelivery(this.purchase.product);
-    } else {
-      Logistics.trackStandardDelivery(this.purchase.product);
-    }
+    this.purchase = purchase
   }
 }
+
+class ExpressDelivery extends Delivery {
+  deliverProduct() {
+    Logistics.issueExpressDelivery(this.purchase.product)
+  }
+  trackProduct() {
+    Logistics.trackExpressDelivery(this.purchase.product)
+  }
+}
+
+class InsuredDelivery extends Delivery {
+  deliverProduct() {
+    Logistics.issueInsuredDelivery(this.purchase.product)
+  }
+  trackProduct() {
+    Logistics.trackInsuredDelivery(this.purchase.product)
+  }
+}
+
+class StandardDelivery extends Delivery {
+  deliverProduct() {
+    Logistics.issueStandardDelivery(this.purchase.product)
+  }
+  trackProduct() {
+    Logistics.trackStandardDelivery(this.purchase.product)
+  }
+}
+
+let delivery: Delivery
+
+if (purchase.deliveryType === "express") {
+  delivery = new ExpressDelivery({})
+} else if (purchase.deliveryType === "insured") {
+  delivery = new InsuredDelivery({})
+} else {
+  delivery = new StandardDelivery({})
+}
+
+delivery.deliverProduct()
