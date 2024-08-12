@@ -1,9 +1,9 @@
 interface Database {
-  storeData(data: any);
+  storeData(data: any)
 }
 
 interface RemoteDatabase {
-  connect(uri: string);
+  connect(uri: string)
 }
 
 class SQLDatabase implements Database, RemoteDatabase {
