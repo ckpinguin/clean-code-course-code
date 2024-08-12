@@ -2,7 +2,7 @@ type Purchase = any
 
 let Logistics: any
 
-class Delivery {
+class DeliveryImpl {
   protected purchase: Purchase
 
   constructor(purchase: Purchase) {
@@ -10,7 +10,12 @@ class Delivery {
   }
 }
 
-class ExpressDelivery extends Delivery {
+interface Delivery {
+  deliverProduct(): any
+  trackProduct(): any
+}
+
+class ExpressDelivery extends DeliveryImpl implements Delivery {
   deliverProduct() {
     Logistics.issueExpressDelivery(this.purchase.product)
   }
@@ -19,7 +24,7 @@ class ExpressDelivery extends Delivery {
   }
 }
 
-class InsuredDelivery extends Delivery {
+class InsuredDelivery extends DeliveryImpl implements Delivery {
   deliverProduct() {
     Logistics.issueInsuredDelivery(this.purchase.product)
   }
@@ -28,7 +33,7 @@ class InsuredDelivery extends Delivery {
   }
 }
 
-class StandardDelivery extends Delivery {
+class StandardDelivery extends DeliveryImpl implements Delivery {
   deliverProduct() {
     Logistics.issueStandardDelivery(this.purchase.product)
   }
@@ -37,14 +42,19 @@ class StandardDelivery extends Delivery {
   }
 }
 
-let delivery: Delivery
+function createDelivery(purchase: Purchase): Delivery {
+  let delivery: Delivery
 
-if (purchase.deliveryType === "express") {
-  delivery = new ExpressDelivery({})
-} else if (purchase.deliveryType === "insured") {
-  delivery = new InsuredDelivery({})
-} else {
-  delivery = new StandardDelivery({})
+  if (purchase.deliveryType === "express") {
+    delivery = new ExpressDelivery({})
+  } else if (purchase.deliveryType === "insured") {
+    delivery = new InsuredDelivery({})
+  } else {
+    delivery = new StandardDelivery({})
+  }
+  return delivery
 }
+
+const delivery = createDelivery({})
 
 delivery.deliverProduct()
